@@ -416,7 +416,7 @@ class TelegramUploader:
             results = await gather(*upload_tasks, return_exceptions=True)
             for r in results:
                 if isinstance(r, Exception):
-                    LOGGER.error(f"Upload task error: {r}")
+                    LOGGER.error(f"Upload task error: {r}", exc_info=True)
             await sleep(1)
         for key, value in list(self._media_dict.items()):
             for subkey, msgs in list(value.items()):
