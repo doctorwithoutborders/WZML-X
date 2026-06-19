@@ -179,6 +179,8 @@ def direct_link_generator(link):
         return osdn(link)
     elif "github.com" in domain:
         return github(link)
+    elif "sourceforge.net" in domain:
+        return sourceforge(link)
     elif "transfer.it" in domain:
         return transfer_it(link)
     elif "hxfile.co" in domain:
@@ -666,6 +668,24 @@ def github(url):
         if "location" in _res.headers:
             return _res.headers["location"]
         raise DirectDownloadLinkException("ERROR: Can't extract the link")
+
+
+def sourceforge(url):
+    """Sourceforge direct links generator"""
+    try:
+        if "downloads.sourceforge.net" not in url:
+            parsed = urlparse(url)
+            path = parsed.path
+            if path.startswith("/projects/"):
+                path = path.replace("/projects/", "/project/", 1)
+            path = path.replace("/files/", "/", 1)
+            if path.endswith("/download"):
+                path = path[:-9]
+            url = f"https://downloads.sourceforge.net{path}"
+        res = get(url, allow_redirects=True, stream=True)
+        return res.url
+    except Exception as e:
+        raise DirectDownloadLinkException(f"ERROR: Sourceforge bypass failed: {e}")
 
 
 def hxfile(url):
