@@ -34,6 +34,7 @@ services:
       - ./rclone.conf:/usr/src/app/rclone.conf
       - ./accounts:/usr/src/app/accounts
       - ./downloads:/usr/src/app/downloads
+      - ./cookies.txt:/usr/src/app/cookies.txt
 
     expose:
       - "8080"
