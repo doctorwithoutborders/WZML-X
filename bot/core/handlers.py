@@ -313,8 +313,7 @@ def add_handlers():
     TgClient.bot.add_handler(
         MessageHandler(
             bot_help,
-            filters=command(BotCommands.HelpCommand, case_sensitive=True)
-            & CustomFilters.authorized,
+            filters=command(BotCommands.HelpCommand, case_sensitive=True),
         )
     )
     TgClient.bot.add_handler(

@@ -429,7 +429,7 @@ def get_bot_commands():
 BOT_COMMANDS = get_bot_commands()
 
 
-def get_help_string():
+def get_help_string(sudo=False):
     from ..telegram_helper.bot_commands import BotCommands
 
     help_lines = ["NOTE: Try each command without any argument to see more detalis."]
@@ -479,12 +479,16 @@ def get_help_string():
                 f"{cmd_str} [drive_url]: Count file/folder of Google Drive."
             )
         elif key == "Delete":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str} [drive_url]: Delete file/folder from Google Drive (Only Owner & Sudo)."
             )
         elif key == "UserSet":
             help_lines.append(f"{cmd_str} [query]: Users settings.")
         elif key == "BotSet":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str} [query]: Bot settings.")
         elif key == "Select":
             help_lines.append(
@@ -509,52 +513,82 @@ def get_help_string():
                 f"{cmd_str}: Show stats of the machine where the bot is hosted in."
             )
         elif key == "Ping":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str}: Check how long it takes to Ping the Bot (Only Owner & Sudo)."
             )
         elif key == "Authorize":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str}: Authorize a chat or a user to use the bot (Only Owner & Sudo)."
             )
         elif key == "UnAuthorize":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str}: Unauthorize a chat or a user to use the bot (Only Owner & Sudo)."
             )
         elif key == "Users":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: show users settings (Only Owner & Sudo).")
         elif key == "AddSudo":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Add sudo user (Only Owner).")
         elif key == "RmSudo":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Remove sudo users (Only Owner).")
         elif key == "BlackList":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Blacklist a user from using the bot (Only Owner & Sudo).")
         elif key == "RmBlackList":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Remove a user from blacklist (Only Owner & Sudo).")
         elif key == "AddImage":
             help_lines.append(f"{cmd_str}: Add an image to the gallery by reply to photo or link.")
         elif key == "Images":
             help_lines.append(f"{cmd_str}: View and manage the image gallery.")
         elif key == "Restart":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str}: Restart and update the bot (Only Owner & Sudo)."
             )
         elif key == "Log":
+            if not sudo:
+                continue
             help_lines.append(
                 f"{cmd_str}: Get a log file of the bot. Handy for getting crash reports (Only Owner & Sudo)."
             )
         elif key == "Shell":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Run shell commands (Only Owner).")
         elif key == "AExec":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Exec async functions (Only Owner).")
         elif key == "Exec":
+            if not sudo:
+                continue
             help_lines.append(f"{cmd_str}: Exec sync functions (Only Owner).")
         elif key == "ClearLocals":
+            if not sudo:
+                continue
             help_lines.append(
                 f"/{BotCommands.ClearLocalsCommand}: Clear {BotCommands.AExecCommand} or {BotCommands.ExecCommand} locals (Only Owner)."
             )
         elif key == "Rss":
             help_lines.append(f"/{BotCommands.RssCommand}: RSS Menu.")
         elif key == "GenPyroSess":
+            if not sudo:
+                continue
             help_lines.append(
                 f"/{BotCommands.GenPyroSessCommand}: Generate Pyrogram String Session (Only Owner & Sudo)."
             )
@@ -562,4 +596,7 @@ def get_help_string():
     return "\n".join(help_lines)
 
 
-help_string = get_help_string()
+sudo_help_string = get_help_string(sudo=True)
+user_help_string = get_help_string(sudo=False)
+help_string = sudo_help_string
+
