@@ -27,7 +27,6 @@ psutil
 pycountry
 pymongo
 pyrotgfork
-pytgcrypto
 python-magic
 pytz
 qbittorrent-api
