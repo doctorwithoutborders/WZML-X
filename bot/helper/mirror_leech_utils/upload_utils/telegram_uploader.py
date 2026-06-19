@@ -74,6 +74,11 @@ class TelegramUploader:
         self._error = ""
         self._hu = HypertgUpload(self) if Config.USE_HYPER and Config.LEECH_DUMP_CHAT else None
 
+    def _on_upload_progress(self, current, total):
+        if self._listener.is_cancelled:
+            raise StopTransmission
+        self._processed_bytes = current
+
     async def _user_settings(self):
         settings_map = {
             "MEDIA_GROUP": ("_media_group", False),
@@ -485,6 +490,7 @@ class TelegramUploader:
                 supports_streaming=True,
                 disable_notification=True,
                 reply_to_message_id=self._sent_msg.id,
+                progress=self._on_upload_progress,
             ) if key == "videos" else await target_client.send_audio(
                 chat_id=self._sent_msg.chat.id,
                 audio=f_path or self._up_path,
@@ -495,6 +501,7 @@ class TelegramUploader:
                 thumb=thumb if thumb and thumb != "none" else None,
                 disable_notification=True,
                 reply_to_message_id=self._sent_msg.id,
+                progress=self._on_upload_progress,
             ) if key == "audios" else await target_client.send_document(
                 chat_id=self._sent_msg.chat.id,
                 document=f_path or self._up_path,
@@ -502,12 +509,14 @@ class TelegramUploader:
                 thumb=thumb if thumb and thumb != "none" else None,
                 disable_notification=True,
                 reply_to_message_id=self._sent_msg.id,
+                progress=self._on_upload_progress,
             ) if key == "documents" else await target_client.send_photo(
                 chat_id=self._sent_msg.chat.id,
                 photo=f_path or self._up_path,
                 caption=cap_mono,
                 disable_notification=True,
                 reply_to_message_id=self._sent_msg.id,
+                progress=self._on_upload_progress,
             )
         return await self._hu.upload(
             target_client=target_client,
