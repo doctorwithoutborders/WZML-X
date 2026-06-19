@@ -1,0 +1,8 @@
+downloads/
+.git/
+accounts/
+token.pickle
+list_drives.txt
+rclone.conf
+*.pyc
+__pycache__/
