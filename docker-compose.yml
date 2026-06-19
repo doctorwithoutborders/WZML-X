@@ -28,7 +28,10 @@ services:
     command: bash start.sh
     restart: unless-stopped
     volumes:
-      - ./config.py:/usr/src/app/config.py:ro
+      - ./config.py:/usr/src/app/config.py
+      - ./token.pickle:/usr/src/app/token.pickle
+      - ./list_drives.txt:/usr/src/app/list_drives.txt
+      - ./rclone.conf:/usr/src/app/rclone.conf
       - ./accounts:/usr/src/app/accounts
       - ./downloads:/usr/src/app/downloads
 
