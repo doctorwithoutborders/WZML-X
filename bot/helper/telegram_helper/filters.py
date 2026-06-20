@@ -3,7 +3,7 @@ from time import time
 from pyrogram.filters import create
 from pyrogram.enums import ChatType
 
-from ... import auth_chats, sudo_users, user_data
+from ... import LOGGER, auth_chats, sudo_users, user_data
 from ...core.config_manager import Config
 from .tg_utils import chat_info
 
@@ -19,7 +19,7 @@ class CustomFilters:
         uid = (update.from_user or update.sender_chat).id
         chat_id = update.chat.id
         thread_id = update.message_thread_id if update.is_topic_message else None
-        return bool(
+        res = bool(
             uid == Config.OWNER_ID
             or (
                 uid in user_data
@@ -47,6 +47,8 @@ class CustomFilters:
                 or not auth_chats[chat_id]
             )
         )
+        LOGGER.info(f"authorized_user: chat_id={chat_id}, uid={uid}, thread_id={thread_id}, res={res}")
+        return res
 
     authorized = create(authorized_user)
 
