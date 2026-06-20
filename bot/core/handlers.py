@@ -237,6 +237,20 @@ def add_handlers():
     )
     TgClient.bot.add_handler(
         MessageHandler(
+            gofile_mirror,
+            filters=command(BotCommands.GfMirrorCommand, case_sensitive=True)
+            & CustomFilters.authorized,
+        )
+    )
+    TgClient.bot.add_handler(
+        MessageHandler(
+            pixeldrain_mirror,
+            filters=command(BotCommands.PdMirrorCommand, case_sensitive=True)
+            & CustomFilters.authorized,
+        )
+    )
+    TgClient.bot.add_handler(
+        MessageHandler(
             get_rss_menu,
             filters=command(BotCommands.RssCommand, case_sensitive=True)
             & CustomFilters.authorized,

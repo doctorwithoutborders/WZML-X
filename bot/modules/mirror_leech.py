@@ -62,6 +62,7 @@ class Mirror(TaskListener):
         is_jd=False,
         is_nzb=False,
         is_uphoster=False,
+        uphoster_service=None,
         same_dir=None,
         bulk=None,
         multi_tag=None,
@@ -84,6 +85,7 @@ class Mirror(TaskListener):
         self.is_jd = is_jd
         self.is_nzb = is_nzb
         self.is_uphoster = is_uphoster
+        self.uphoster_service = uphoster_service
 
     async def new_event(self):
         text = self.message.text.split("\n")
@@ -314,6 +316,7 @@ class Mirror(TaskListener):
                 self.is_jd,
                 self.is_nzb,
                 self.is_uphoster,
+                self.uphoster_service,
                 self.same_dir,
                 self.bulk,
                 self.multi_tag,
@@ -528,3 +531,19 @@ async def nzb_leech(client, message):
 
 async def uphoster(client, message):
     bot_loop.create_task(Mirror(client, message, is_uphoster=True).new_event())
+
+
+async def gofile_mirror(client, message):
+    bot_loop.create_task(
+        Mirror(
+            client, message, is_uphoster=True, uphoster_service="gofile"
+        ).new_event()
+    )
+
+
+async def pixeldrain_mirror(client, message):
+    bot_loop.create_task(
+        Mirror(
+            client, message, is_uphoster=True, uphoster_service="pixeldrain"
+        ).new_event()
+    )

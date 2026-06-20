@@ -43,7 +43,7 @@ async def _tcp_tuned_connect(self, address):
             LOGGER.info(f"HypertgTCP socket tune failed: {e}")
 
 
-# TCP.connect = _tcp_tuned_connect
+TCP.connect = _tcp_tuned_connect
 
 _orig_dc_new = DataCenter.__new__
 
@@ -55,7 +55,7 @@ def _dc_alt_port(cls, dc_id, test_mode, ipv6, media):
     return ip, port
 
 
-# DataCenter.__new__ = staticmethod(_dc_alt_port)
+DataCenter.__new__ = staticmethod(_dc_alt_port)
 
 MB = 1024 * 1024
 

@@ -365,7 +365,7 @@ class TaskListener(TaskConfig):
             del tg
         elif self.is_uphoster:
             LOGGER.info(f"Uphoster Upload Name: {self.name}")
-            uphoster_service = self.user_dict.get("UPHOSTER_SERVICE", "gofile")
+            uphoster_service = self.uphoster_service or self.user_dict.get("UPHOSTER_SERVICE", "gofile")
             services = uphoster_service.split(",")
             ddl = MultiUphosterUpload(self, up_path, services)
             async with task_dict_lock:

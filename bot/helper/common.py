@@ -118,6 +118,7 @@ class TaskConfig:
         self.is_jd = False
         self.is_clone = False
         self.is_uphoster = False
+        self.uphoster_service = None
         self.is_gdrive = False
         self.is_rclone = False
         self.is_ytdlp = False
@@ -354,7 +355,7 @@ class TaskConfig:
                     self.up_dest = "mega:"
 
                 if self.is_uphoster and not self.up_dest:
-                    uphoster_service = self.user_dict.get("UPHOSTER_SERVICE", "gofile")
+                    uphoster_service = self.uphoster_service or self.user_dict.get("UPHOSTER_SERVICE", "gofile")
                     services = uphoster_service.split(",")
                     for service in services:
                         if service == "gofile":
@@ -672,6 +673,7 @@ class TaskConfig:
             is_jd=self.is_jd,
             is_nzb=self.is_nzb,
             is_uphoster=self.is_uphoster,
+            uphoster_service=self.uphoster_service,
             same_dir=self.same_dir,
             bulk=self.bulk,
             multi_tag=self.multi_tag,
@@ -718,6 +720,7 @@ class TaskConfig:
                 is_jd=self.is_jd,
                 is_nzb=self.is_nzb,
                 is_uphoster=self.is_uphoster,
+                uphoster_service=self.uphoster_service,
                 same_dir=self.same_dir,
                 bulk=self.bulk,
                 multi_tag=self.multi_tag,

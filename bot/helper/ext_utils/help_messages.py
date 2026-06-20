@@ -388,6 +388,8 @@ def get_bot_commands():
         "QbMirror": "[magnet/torrent] Mirror to Upload Destination using qbit",
         "Ytdl": "[link] Mirror YouTube, m3u8, Social Media and yt-dlp supported urls",
         "UpHoster": "[link/file] Upload to DDL Servers",
+        "GfMirror": "[link/file] Mirror to GoFile Upload Destination",
+        "PdMirror": "[link/file] Mirror to PixelDrain Upload Destination",
         "Leech": "[link/file] Leech files to Upload to Telegram",
         "QbLeech": "[magnet/torrent] Leech files to Upload to Telegram using qbit",
         "YtdlLeech": "[link] Leech YouTube, m3u8, Social Media and yt-dlp supported urls",
@@ -460,6 +462,10 @@ def get_help_string(sudo=False):
             help_lines.append(f"{cmd_str}: Mirror yt-dlp supported link.")
         elif key == "UpHoster":
             help_lines.append(f"{cmd_str}: Upload to DDL Servers.")
+        elif key == "GfMirror":
+            help_lines.append(f"{cmd_str}: Upload to GoFile.")
+        elif key == "PdMirror":
+            help_lines.append(f"{cmd_str}: Upload to PixelDrain.")
         elif key == "Leech":
             help_lines.append(f"{cmd_str}: Start leeching to Telegram.")
         elif key == "QbLeech":

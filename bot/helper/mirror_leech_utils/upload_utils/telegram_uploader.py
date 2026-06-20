@@ -72,7 +72,7 @@ class TelegramUploader:
         self._log_msg = None
         self._user_session = self._listener.transmission_mode in ("user", "both")
         self._error = ""
-        self._hu = HypertgUpload(self) if Config.USE_HYPER and Config.LEECH_DUMP_CHAT else None
+        self._hu = HypertgUpload(self) if Config.USE_HYPER else None
 
     def _on_upload_progress(self, current, total):
         if self._listener.is_cancelled:

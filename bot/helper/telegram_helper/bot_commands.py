@@ -12,6 +12,8 @@ class BotCommands:
         "JdMirror": ["jdmirror", "jm"],
         "Ytdl": ["ytdl", "y"],
         "UpHoster": ["uphoster", "up"],
+        "GfMirror": ["gf"],
+        "PdMirror": ["pd"],
         "NzbMirror": ["nzbmirror", "nm"],
         "Leech": ["leech", "l"],
         "QbLeech": ["qbleech", "ql"],

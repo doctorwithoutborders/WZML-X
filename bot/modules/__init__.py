@@ -32,6 +32,8 @@ from .mirror_leech import (
     nzb_leech,
     nzb_mirror,
     uphoster,
+    gofile_mirror,
+    pixeldrain_mirror,
 )
 from .restart import (
     restart_bot,
@@ -81,6 +83,8 @@ __all__ = [
     "select_type",
     "arg_usage",
     "uphoster",
+    "gofile_mirror",
+    "pixeldrain_mirror",
     "mirror",
     "leech",
     "qb_leech",
