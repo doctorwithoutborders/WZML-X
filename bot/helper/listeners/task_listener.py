@@ -520,7 +520,7 @@ class TaskListener(TaskConfig):
                     buttons.url_button(btn_label, link, style=ButtonStyle.PRIMARY)
                 elif multi_links:
                     for name, url in multi_links:
-                        buttons.url_button(name, url)
+                        buttons.url_button(name, url, style=ButtonStyle.PRIMARY)
                 else:
                     msg += f"\n\nPath: <code>{rclone_path}</code>"
                 if rclone_path and Config.RCLONE_SERVE_URL and not self.private_link:
