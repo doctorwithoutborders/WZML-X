@@ -1345,6 +1345,100 @@ async def edit_bot_settings(client, query):
 @new_task
 async def send_bot_settings(_, message):
     handler_dict[message.chat.id] = False
+    text = message.text.split(" ", 2)
+    if len(text) > 2:
+        key = text[1].upper()
+        val_str = text[2]
+        
+        # Check if the key exists in Config
+        if key not in Config.get_all():
+            await send_message(message, f"<b>Error:</b> Variable <code>{key}</code> is not a valid Config variable!")
+            return
+            
+        # Parse value
+        if val_str.lower() == "true":
+            value = True
+        elif val_str.lower() == "false":
+            value = False
+        elif val_str.isdigit():
+            value = int(val_str)
+        elif val_str.startswith("[") and val_str.endswith("]"):
+            try:
+                value = literal_eval(val_str)
+            except Exception:
+                await send_message(message, "<b>Error:</b> Invalid list format!")
+                return
+        elif val_str.startswith("{") and val_str.endswith("}"):
+            try:
+                value = literal_eval(val_str)
+            except Exception:
+                await send_message(message, "<b>Error:</b> Invalid dict format!")
+                return
+        else:
+            value = val_str
+
+        # Specific checks
+        if key == "USENET_SERVERS":
+            if not isinstance(value, list):
+                await send_message(message, "USENET_SERVERS must be a list of dicts!")
+                return
+            for s in value:
+                if not isinstance(s, dict):
+                    await send_message(message, "Each USENET_SERVERS entry must be a dict!")
+                    return
+                missing = [f for f in REQUIRED_SERVER_FIELDS if not s.get(f)]
+                if missing:
+                    await send_message(
+                        message, f"Server missing required field(s): {', '.join(missing)}"
+                    )
+                    return
+
+        # Set & Save
+        Config.set(key, value)
+        if Config.DATABASE_URL:
+            await database.update_config({key: value})
+
+        # Apply side-effects
+        if key == "CMD_SUFFIX":
+            BotCommands.refresh_commands()
+        elif key in ["SEARCH_PLUGINS", "SEARCH_API_LINK"]:
+            await initiate_search_tools()
+        elif key in ["QUEUE_ALL", "QUEUE_DOWNLOAD", "QUEUE_UPLOAD"]:
+            await start_from_queued()
+        elif key in [
+            "RCLONE_SERVE_URL",
+            "RCLONE_SERVE_PORT",
+            "RCLONE_SERVE_USER",
+            "RCLONE_SERVE_PASS",
+        ]:
+            await rclone_serve_booter()
+        elif key in ["JD_EMAIL", "JD_PASS"]:
+            await jdownloader.boot()
+        elif key == "RSS_DELAY":
+            add_job()
+        elif key == "USENET_SERVERS":
+            for s in value:
+                await sabnzbd_client.set_special_config("servers", s)
+        elif key.startswith("DISABLE_"):
+            await _handle_service_toggle(key, value)
+
+        note = ""
+        if key in RESTART_VARS:
+            note = "\n\n<b>Note:</b> Restart required for this edit to take effect!"
+
+        await send_message(message, f"<b>Success:</b> Variable <code>{key}</code> has been updated to: <code>{value}</code>{note}")
+        return
+    elif len(text) == 2:
+        # User only sent /bsetting KEY -> show current value
+        key = text[1].upper()
+        if key in Config.get_all():
+            val = Config.get(key)
+            await send_message(message, f"⌬ <b>Variable:</b> <code>{key}</code>\n┖ <b>Current Value:</b> <code>{val}</code>")
+            return
+        else:
+            await send_message(message, f"<b>Error:</b> Variable <code>{key}</code> is not a valid Config variable!")
+            return
+
     msg, button = await get_buttons()
     globals()["start"] = 0
     await send_message(message, msg, button)
