@@ -146,15 +146,19 @@ class TelegramDownloadHelper:
             if self._hyper_dl:
                 self.session = "hbots"
             elif self._listener.transmission_mode in ("user", "both") and self._listener.is_super_chat:
-                self.session = "user"
-                try:
-                    message = await TgClient.user.get_messages(
-                        chat_id=message.chat.id, message_ids=message.id
-                    )
-                except (PeerIdInvalid, ChannelInvalid):
-                    LOGGER.warning(
-                        "User session is not in this chat!, Downloading with bot session"
-                    )
+                # ponytail: check if TgClient.user session is active before using it
+                if TgClient.user:
+                    self.session = "user"
+                    try:
+                        message = await TgClient.user.get_messages(
+                            chat_id=message.chat.id, message_ids=message.id
+                        )
+                    except (PeerIdInvalid, ChannelInvalid):
+                        LOGGER.warning(
+                            "User session is not in this chat!, Downloading with bot session"
+                        )
+                        self.session = "bot"
+                else:
                     self.session = "bot"
             else:
                 self.session = "bot"
