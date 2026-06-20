@@ -33,6 +33,7 @@ class CustomFilters:
                 and user_data[chat_id].get("AUTH", False)
                 and (
                     thread_id is None
+                    or not user_data[chat_id].get("thread_ids")
                     or thread_id in user_data[chat_id].get("thread_ids", [])
                 )
             )

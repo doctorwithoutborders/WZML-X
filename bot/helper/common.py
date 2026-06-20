@@ -151,7 +151,12 @@ class TaskConfig:
         self.dump_chat = 0
         self.dump_msg_id = 0
         self.metadata_title = None
-        self.chat_thread_id = None
+        # ponytail: default thread_id to the message thread_id if it's a topic message
+        self.chat_thread_id = (
+            self.message.message_thread_id
+            if isinstance(self.message, Message) and self.message.is_topic_message
+            else None
+        )
         self.subproc = None
         self.thumb = None
         self.excluded_extensions = []
