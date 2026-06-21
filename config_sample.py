@@ -186,6 +186,7 @@ THUMBNAIL_LAYOUT = ""
 
 # Log Channels
 LEECH_DUMP_CHAT = ""
+OWNER_DUMP_CHAT = ""
 LINKS_LOG_ID = ""
 MIRROR_LOG_ID = ""
 

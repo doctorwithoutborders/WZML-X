@@ -109,11 +109,21 @@ class TaskListener(TaskConfig):
             await send_message(
                 Config.LINKS_LOG_ID,
                 f"""➲  <b><u>{mode_name} Started:</u></b>
- ┃
- ┠ <b>User :</b> {self.tag} ( #ID{self.user_id} )
- ┠ <b>Message Link :</b> <a href='{self.message.link}'>Click Here</a>
- ┗ <b>Link:</b> <a href='{self.source_url}'>Click Here</a>
- """,
+  ┃
+  ┠ <b>User :</b> {self.tag} ( #ID{self.user_id} )
+  ┠ <b>Message Link :</b> <a href='{self.message.link}'>Click Here</a>
+  ┗ <b>Link:</b> <a href='{self.source_url}'>Click Here</a>
+  """,
+            )
+        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+            await send_message(
+                Config.OWNER_DUMP_CHAT,
+                f"""➲  <b><u>{mode_name} Started:</u></b>
+  ┃
+  ┠ <b>User :</b> {self.tag} ( #ID{self.user_id} )
+  ┠ <b>Message Link :</b> <a href='{self.message.link}'>Click Here</a>
+  ┗ <b>Link:</b> <a href='{self.source_url}'>Click Here</a>
+  """,
             )
         if (
             self.is_super_chat
@@ -444,6 +454,8 @@ class TaskListener(TaskConfig):
             await send_message(self.user_id, msg, button)
             if Config.LEECH_DUMP_CHAT:
                 await send_message(Config.LEECH_DUMP_CHAT, msg, button)
+            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+                await send_message(Config.OWNER_DUMP_CHAT, msg, button)
             await send_message(self.message, user_message, button)
 
         elif self.is_leech:
@@ -469,7 +481,7 @@ class TaskListener(TaskConfig):
                     chat_id, msg_id = link.split("/")[-2:]
                     fmsg += f"{index}. <a href='{link}'>{name}</a>"
                     if Config.MEDIA_STORE and (
-                        self.is_super_chat or Config.LEECH_DUMP_CHAT
+                        self.is_super_chat or Config.LEECH_DUMP_CHAT or (self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT)
                     ):
                         if chat_id.isdigit():
                             chat_id = f"-100{chat_id}"
@@ -478,10 +490,14 @@ class TaskListener(TaskConfig):
                     fmsg += "\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
                         await send_message(log_chat, msg + fmsg)
+                        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat:
+                            await send_message(Config.OWNER_DUMP_CHAT, msg + fmsg)
                         await sleep(1)
                         fmsg = ""
                 if fmsg != "":
                     await send_message(log_chat, msg + fmsg)
+                    if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat:
+                        await send_message(Config.OWNER_DUMP_CHAT, msg + fmsg)
         else:
             msg += f"\n│\n┟ <b>Type</b> → {mime_type}"
             if mime_type == "Folder":
@@ -571,6 +587,9 @@ class TaskListener(TaskConfig):
 
             if hasattr(Config, "MIRROR_LOG_ID") and Config.MIRROR_LOG_ID:
                 await send_message(Config.MIRROR_LOG_ID, msg, button)
+
+            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+                await send_message(Config.OWNER_DUMP_CHAT, msg, button)
 
             await send_message(self.message, group_msg, button)
         if self.seed:

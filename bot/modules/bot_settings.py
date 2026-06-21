@@ -189,6 +189,7 @@ DEFAULT_DESP = {
     "ARCHIVE_LIMIT": "Archive (zip) size limit in GB. 0 = unlimited.",
     "STORAGE_LIMIT": "Minimum free storage to maintain in GB. Downloads cancelled if exceeded.",
     "LEECH_DUMP_CHAT": "Chat ID (integer) to dump all leeched files. Leave empty to disable.",
+    "OWNER_DUMP_CHAT": "Chat ID (integer) to dump all mirror/leech activities done by the owner. Leave empty to disable.",
     "LINKS_LOG_ID": "Chat ID for link logging.",
     "MIRROR_LOG_ID": "Chat ID(s) for mirror logs. Space-separated for multiple.",
     "CLEAN_LOG_MSG": "Clean leech log and bot PM task messages. Default: False.",
@@ -575,6 +576,16 @@ async def edit_variable(_, message, pre_message, key):
                 await send_message(
                     message,
                     "Invalid value! LEECH_DUMP_CHAT must be a valid integer chat ID.",
+                )
+                return await update_buttons(pre_message, "var")
+    elif key == "OWNER_DUMP_CHAT":
+        if value.strip():
+            try:
+                value = int(value.strip())
+            except ValueError:
+                await send_message(
+                    message,
+                    "Invalid value! OWNER_DUMP_CHAT must be a valid integer chat ID.",
                 )
                 return await update_buttons(pre_message, "var")
     elif key == "AUTHORIZED_CHATS":
