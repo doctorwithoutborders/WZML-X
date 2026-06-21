@@ -115,7 +115,7 @@ class TaskListener(TaskConfig):
   ┗ <b>Link:</b> <a href='{self.source_url}'>Click Here</a>
   """,
             )
-        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != self.message.chat.id:
             await send_message(
                 Config.OWNER_DUMP_CHAT,
                 f"""➲  <b><u>{mode_name} Started:</u></b>
@@ -454,7 +454,7 @@ class TaskListener(TaskConfig):
             await send_message(self.user_id, msg, button)
             if Config.LEECH_DUMP_CHAT:
                 await send_message(Config.LEECH_DUMP_CHAT, msg, button)
-            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != self.message.chat.id:
                 await send_message(Config.OWNER_DUMP_CHAT, msg, button)
             await send_message(self.message, user_message, button)
 
@@ -475,6 +475,7 @@ class TaskListener(TaskConfig):
                 await send_message(self.message, msg)
             else:
                 log_chat = self.user_id if self.bot_pm else self.message
+                log_chat_id = self.user_id if self.bot_pm else self.message.chat.id
                 msg += "〶 <b><u>Files List :</u></b>\n"
                 fmsg = ""
                 for index, (link, name) in enumerate(files.items(), start=1):
@@ -490,13 +491,13 @@ class TaskListener(TaskConfig):
                     fmsg += "\n"
                     if len(fmsg.encode() + msg.encode()) > 4000:
                         await send_message(log_chat, msg + fmsg)
-                        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat:
+                        if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat_id:
                             await send_message(Config.OWNER_DUMP_CHAT, msg + fmsg)
                         await sleep(1)
                         fmsg = ""
                 if fmsg != "":
                     await send_message(log_chat, msg + fmsg)
-                    if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat:
+                    if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != log_chat_id:
                         await send_message(Config.OWNER_DUMP_CHAT, msg + fmsg)
         else:
             msg += f"\n│\n┟ <b>Type</b> → {mime_type}"
@@ -588,7 +589,7 @@ class TaskListener(TaskConfig):
             if hasattr(Config, "MIRROR_LOG_ID") and Config.MIRROR_LOG_ID:
                 await send_message(Config.MIRROR_LOG_ID, msg, button)
 
-            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID:
+            if Config.OWNER_DUMP_CHAT and self.user_id == Config.OWNER_ID and Config.OWNER_DUMP_CHAT != self.message.chat.id:
                 await send_message(Config.OWNER_DUMP_CHAT, msg, button)
 
             await send_message(self.message, group_msg, button)
